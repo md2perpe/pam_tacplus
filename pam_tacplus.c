@@ -783,7 +783,7 @@ int pam_sm_acct_mgmt (pam_handle_t * pamh, int flags,
     while (attr != NULL)  {
         char attribute[attr->attr_len];
         char value[attr->attr_len];
-        char attrenv[attr->attr_len];
+        char attrenv[1 + attr->attr_len];
         char *sep;
 
         sep = index(attr->attr, '=');
@@ -826,7 +826,7 @@ int pam_sm_acct_mgmt (pam_handle_t * pamh, int flags,
              * environment. Since separator can be = or *, ensure it's = for
              * the env.
              */
-            snprintf(attrenv, sizeof attribute, "%s=%s", attribute, value+1);
+            snprintf(attrenv, sizeof attrenv, "%s=%s", attribute, value+1);
             if (pam_putenv(pamh, attrenv) != PAM_SUCCESS)
                 _pam_log(LOG_WARNING, "%s: unable to set PAM environment (%s)",
                     __func__, attribute);
